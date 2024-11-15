@@ -11,8 +11,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping(ApiPath.ADMIN_PATH)
 public class AdminController {
-    @GetMapping
-    public ResponseEntity<?> get(){
-        return ResponseEntity.ok("admin");
-    }
 }
