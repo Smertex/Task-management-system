@@ -1,6 +1,6 @@
 package by.smertex.controller;
 
-import by.smertex.dto.JwtRequest;
+import by.smertex.dto.security.JwtRequest;
 import by.smertex.service.AuthService;
 import by.smertex.util.ApiPath;
 import lombok.RequiredArgsConstructor;

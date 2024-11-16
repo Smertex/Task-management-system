@@ -1,7 +1,7 @@
 package by.smertex.service;
 
-import by.smertex.dto.JwtRequest;
-import by.smertex.dto.AppError;
+import by.smertex.dto.security.JwtRequest;
+import by.smertex.dto.security.AppError;
 import by.smertex.util.JwtTokenUtils;
 import by.smertex.util.ResponseMessage;
 import lombok.RequiredArgsConstructor;

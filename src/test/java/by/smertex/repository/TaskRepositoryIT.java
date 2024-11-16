@@ -9,10 +9,13 @@ import by.smertex.database.entity.enums.Status;
 import by.smertex.database.repository.TaskRepository;
 import by.smertex.database.repository.UserRepository;
 import by.smertex.database.repository.filter.QPredicateImpl;
-import by.smertex.dto.TaskFilter;
+import by.smertex.dto.filter.TaskAdminFilter;
+import by.smertex.dto.filter.TaskUserFilter;
+import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +29,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @RequiredArgsConstructor
 public class TaskRepositoryIT {
     private static final UUID USER_TEST_ID = UUID.fromString("11d1b3a8-0def-4a8a-b00f-b51c43cd14e3");
+
+    private static final String USER_EMAIL_TEST = "evgenii@gmail.com";
 
     private final TaskRepository taskRepository;
 
@@ -43,11 +48,11 @@ public class TaskRepositoryIT {
 
         User user = optionalUser.get();
 
-        TaskFilter taskFilter = TaskFilter.builder()
+        TaskAdminFilter taskAdminFilter = TaskAdminFilter.builder()
                 .createdBy(user)
                 .build();
         List<Task> tasks = taskRepository.findAll(QPredicateImpl.builder()
-                .add(taskFilter.createdBy(), QTask.task.metaInfo.createdBy::eq)
+                .add(taskAdminFilter.createdBy(), QTask.task.metaInfo.createdBy::eq)
                 .buildAnd(), PageRequest.of(0, 2)).getContent();
 
         assertThat(tasks).hasSize(2);
@@ -66,11 +71,11 @@ public class TaskRepositoryIT {
 
         User user = optionalUser.get();
 
-        TaskFilter taskFilter = TaskFilter.builder()
+        TaskAdminFilter taskAdminFilter = TaskAdminFilter.builder()
                 .performer(user)
                 .build();
         List<Task> tasks = taskRepository.findAll(QPredicateImpl.builder()
-                .add(taskFilter.performer(), QTask.task.performer::eq)
+                .add(taskAdminFilter.performer(), QTask.task.performer::eq)
                 .buildAnd(), PageRequest.of(0, 2)).getContent();
 
         assertThat(tasks).hasSize(1);
@@ -89,11 +94,11 @@ public class TaskRepositoryIT {
 
         User user = optionalUser.get();
 
-        TaskFilter taskFilter = TaskFilter.builder()
+        TaskAdminFilter taskAdminFilter = TaskAdminFilter.builder()
                 .createdBy(user)
                 .build();
         List<Task> tasks = taskRepository.findAll(QPredicateImpl.builder()
-                .add(taskFilter.createdBy(), QTask.task.metaInfo.createdBy::eq)
+                .add(taskAdminFilter.createdBy(), QTask.task.metaInfo.createdBy::eq)
                 .buildAnd(), PageRequest.of(0, 2))
                 .getContent();
 
@@ -115,15 +120,15 @@ public class TaskRepositoryIT {
 
         User user = optionalUser.get();
 
-        TaskFilter taskFilter = TaskFilter.builder()
+        TaskAdminFilter taskAdminFilter = TaskAdminFilter.builder()
                 .createdBy(user)
                 .status(Status.WAITING)
                 .priority(Priority.LOWEST)
                 .build();
         List<Task> tasks = taskRepository.findAll(QPredicateImpl.builder()
-                .add(taskFilter.createdBy(), QTask.task.metaInfo.createdBy::eq)
-                .add(taskFilter.status(), QTask.task.status::eq)
-                .add(taskFilter.priority(), QTask.task.priority::eq)
+                .add(taskAdminFilter.createdBy(), QTask.task.metaInfo.createdBy::eq)
+                .add(taskAdminFilter.status(), QTask.task.status::eq)
+                .add(taskAdminFilter.priority(), QTask.task.priority::eq)
                 .buildAnd(), PageRequest.of(0, 2))
                 .getContent();
 
@@ -131,8 +136,31 @@ public class TaskRepositoryIT {
 
         Task task = tasks.get(0);
 
-        assertEquals(task.getMetaInfo().getCreatedBy(), taskFilter.createdBy());
-        assertEquals(task.getStatus(), taskFilter.status());
-        assertEquals(task.getPriority(), taskFilter.priority());
+        assertEquals(task.getMetaInfo().getCreatedBy(), taskAdminFilter.createdBy());
+        assertEquals(task.getStatus(), taskAdminFilter.status());
+        assertEquals(task.getPriority(), taskAdminFilter.priority());
+    }
+
+    /**
+     * Поиск по email с учетом фильтрации и пагинации
+     */
+    @Test
+    void findAllByPerformerUsername(){
+        TaskUserFilter taskUserFilter = TaskUserFilter.builder()
+                .status(Status.WAITING)
+                .priority(Priority.LOWEST)
+                .build();
+
+        Predicate predicate = QPredicateImpl.builder()
+                .add(taskUserFilter.createdBy(), QTask.task.metaInfo.createdBy::eq)
+                .add(taskUserFilter.status(), QTask.task.status::eq)
+                .add(taskUserFilter.priority(), QTask.task.priority::eq)
+                .add(USER_EMAIL_TEST, QTask.task.performer.email::eq)
+                .buildAnd();
+
+        Pageable pageable = PageRequest.of(0, 2);
+        List<Task> tasks = taskRepository.findAll(predicate, pageable).getContent();
+
+        tasks.forEach(task -> assertEquals(task.getPerformer().getEmail(), USER_EMAIL_TEST));
     }
 }

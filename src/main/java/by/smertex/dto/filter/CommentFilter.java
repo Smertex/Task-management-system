@@ -1,4 +1,4 @@
-package by.smertex.dto;
+package by.smertex.dto.filter;
 
 import by.smertex.database.entity.Task;
 import by.smertex.database.entity.User;

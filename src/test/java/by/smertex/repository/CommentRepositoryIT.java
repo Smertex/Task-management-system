@@ -9,7 +9,7 @@ import by.smertex.database.repository.CommentRepository;
 import by.smertex.database.repository.TaskRepository;
 import by.smertex.database.repository.UserRepository;
 import by.smertex.database.repository.filter.QPredicateImpl;
-import by.smertex.dto.CommentFilter;
+import by.smertex.dto.filter.CommentFilter;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;

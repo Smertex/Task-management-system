@@ -1,4 +1,4 @@
-package by.smertex.dto;
+package by.smertex.dto.security;
 
 import lombok.Data;
 
