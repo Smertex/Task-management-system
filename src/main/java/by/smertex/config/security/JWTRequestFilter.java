@@ -5,7 +5,6 @@ import by.smertex.util.JwtTokenUtils;
 import by.smertex.util.ResponseMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.SignatureException;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.FilterChain;
@@ -53,7 +52,9 @@ public class JWTRequestFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     username,
                     null,
-                    jwtTokenUtils.getRoles(jwt).stream().map(SimpleGrantedAuthority::new).toList());
+                    jwtTokenUtils.getRoles(jwt).stream()
+                            .map(SimpleGrantedAuthority::new)
+                            .toList());
             SecurityContextHolder.getContext().setAuthentication(token);
         }
         filterChain.doFilter(request, response);

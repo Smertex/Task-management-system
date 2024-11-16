@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@ToString(exclude = {"comments", "metaInfo", "performer"})
+@ToString(exclude = {"comments", "metainfo", "performer"})
 @Builder
 @Entity
 @Table(name = "task")
@@ -38,7 +38,7 @@ public class Task implements BaseEntity<UUID>{
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "metainfo_id")
-    private Metainfo metaInfo;
+    private Metainfo metainfo;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "performer_id")

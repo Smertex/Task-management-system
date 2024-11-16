@@ -2,16 +2,10 @@ package by.smertex.service;
 
 import by.smertex.annotation.IT;
 import by.smertex.database.entity.User;
-import by.smertex.database.entity.enums.Status;
 import by.smertex.database.repository.UserRepository;
-import by.smertex.dto.filter.TaskAdminFilter;
-import by.smertex.dto.read.ReadTaskDto;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

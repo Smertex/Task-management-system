@@ -1,7 +1,9 @@
 package by.smertex.service;
 
+import by.smertex.database.entity.enums.Role;
 import by.smertex.dto.security.JwtRequest;
 import by.smertex.dto.security.AppError;
+import by.smertex.dto.security.SecurityUserDto;
 import by.smertex.util.JwtTokenUtils;
 import by.smertex.util.ResponseMessage;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,5 +38,15 @@ public class AuthService {
         UserDetails userDetails = loadUserService.loadUserByUsername(authRequest.username());
         String token = jwtTokenUtils.generateToken(userDetails);
         return ResponseEntity.ok(token);
+    }
+
+
+    public SecurityUserDto takeUserFromContext(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return SecurityUserDto.builder()
+                .email((String) authentication.getPrincipal())
+                .isAdmin(authentication.getAuthorities().stream()
+                        .anyMatch(role -> role.getAuthority().equals(Role.ADMIN.getEditedRole())))
+                .build();
     }
 }

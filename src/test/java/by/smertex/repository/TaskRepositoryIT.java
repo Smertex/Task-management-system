@@ -1,28 +1,14 @@
 package by.smertex.repository;
 
 import by.smertex.annotation.IT;
-import by.smertex.database.entity.QTask;
-import by.smertex.database.entity.Task;
-import by.smertex.database.entity.User;
-import by.smertex.database.entity.enums.Priority;
-import by.smertex.database.entity.enums.Status;
 import by.smertex.database.repository.TaskRepository;
 import by.smertex.database.repository.UserRepository;
-import by.smertex.database.repository.filter.QPredicateImpl;
-import by.smertex.dto.filter.TaskAdminFilter;
-import by.smertex.dto.filter.TaskUserFilter;
-import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @IT

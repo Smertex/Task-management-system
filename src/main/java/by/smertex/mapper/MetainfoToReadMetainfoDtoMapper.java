@@ -16,7 +16,7 @@ public class MetainfoToReadMetainfoDtoMapper implements Mapper<Metainfo, ReadMet
         return ReadMetainfoDto.builder()
                 .id(from.getId())
                 .createAt(from.getCreatedAt())
-                .closedAt(from.getCloseAt())
+                .closedAt(from.getClosedAt())
                 .createBy(userToReadUserDtoMapper.map(from.getCreatedBy()))
                 .build();
     }

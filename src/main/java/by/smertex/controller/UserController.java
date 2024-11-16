@@ -1,7 +1,7 @@
 package by.smertex.controller;
 
 import by.smertex.dto.filter.CommentFilter;
-import by.smertex.dto.filter.TaskUserFilter;
+import by.smertex.dto.filter.TaskFilter;
 import by.smertex.dto.read.ReadCommentDto;
 import by.smertex.dto.read.ReadTaskDto;
 import by.smertex.dto.update.CreateOrUpdateUserDto;
@@ -30,9 +30,9 @@ public class UserController {
     private final CommentService commentService;
 
     @GetMapping
-    public List<ReadTaskDto> findAllByToken(@RequestBody TaskUserFilter filter,
+    public List<ReadTaskDto> findAllByToken(@RequestBody TaskFilter filter,
                                             Pageable pageable){
-        return taskService.findAllByTokenAndFilter(filter, pageable);
+        return taskService.findAllByFilter(filter, pageable);
     }
 
     @GetMapping(ApiPath.COMMENT_PATH)

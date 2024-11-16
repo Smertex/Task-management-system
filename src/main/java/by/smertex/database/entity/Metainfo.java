@@ -23,7 +23,7 @@ public class Metainfo implements BaseEntity<UUID> {
     private LocalDateTime createdAt;
 
     @Column(name = "closed_at")
-    private LocalDateTime closeAt;
+    private LocalDateTime closedAt;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
