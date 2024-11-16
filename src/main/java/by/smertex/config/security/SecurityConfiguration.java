@@ -1,6 +1,8 @@
 package by.smertex.config.security;
 
+import by.smertex.database.entity.enums.Role;
 import by.smertex.service.LoadUserService;
+import by.smertex.util.ApiPath;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;

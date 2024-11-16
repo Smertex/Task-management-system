@@ -3,6 +3,7 @@ package by.smertex.config.security;
 import by.smertex.util.JwtTokenUtils;
 import by.smertex.util.ResponseMessage;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.SignatureException;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.FilterChain;
@@ -35,9 +36,13 @@ public class JWTRequestFilter extends OncePerRequestFilter {
             try{
                 username = jwtTokenUtils.getUsername(jwt);
             } catch (ExpiredJwtException e){
-                logger.error(ResponseMessage.EXPIRED_JWT_EXCEPTION);
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write(ResponseMessage.EXPIRED_JWT_EXCEPTION);
+                return;
             } catch (SignatureException e){
-                logger.error(ResponseMessage.SIGNATURE_EXCEPTION);
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write(ResponseMessage.SIGNATURE_EXCEPTION);
+                return;
             }
         }
 
