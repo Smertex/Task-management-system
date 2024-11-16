@@ -1,7 +1,9 @@
 package by.smertex.config.security;
 
+import by.smertex.dto.exception.ResponseException;
 import by.smertex.util.JwtTokenUtils;
 import by.smertex.util.ResponseMessage;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.SignatureException;
@@ -11,6 +13,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,10 +22,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
 public class JWTRequestFilter extends OncePerRequestFilter {
+
+    private final ObjectMapper objectMapper;
 
     private final JwtTokenUtils jwtTokenUtils;
 
@@ -36,13 +43,9 @@ public class JWTRequestFilter extends OncePerRequestFilter {
             try{
                 username = jwtTokenUtils.getUsername(jwt);
             } catch (ExpiredJwtException e){
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write(ResponseMessage.EXPIRED_JWT_EXCEPTION);
-                return;
+                response.getWriter().write(objectMapper.writeValueAsString(responseException(response, ResponseMessage.EXPIRED_JWT_EXCEPTION)));
             } catch (SignatureException e){
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write(ResponseMessage.SIGNATURE_EXCEPTION);
-                return;
+                response.getWriter().write(objectMapper.writeValueAsString(responseException(response, ResponseMessage.SIGNATURE_EXCEPTION)));
             }
         }
 
@@ -54,5 +57,11 @@ public class JWTRequestFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(token);
         }
         filterChain.doFilter(request, response);
+    }
+
+    private ResponseException responseException(HttpServletResponse response, String message) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        return new ResponseException(message, HttpStatus.UNAUTHORIZED, LocalDateTime.now());
     }
 }

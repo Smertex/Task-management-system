@@ -1,6 +1,5 @@
 package by.smertex.service;
 
-import by.smertex.database.repository.UserRepository;
 import by.smertex.util.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
@@ -12,11 +11,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class LoadUserService implements UserDetailsService {
-    private final UserRepository userRepository;
+
+    private final UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username)
+        return userService.findByEmail(username)
                 .map(user -> User.builder()
                         .username(user.getEmail())
                         .password(user.getPassword())

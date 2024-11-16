@@ -1,8 +1,11 @@
 package by.smertex.controller;
 
+import by.smertex.dto.filter.CommentFilter;
 import by.smertex.dto.filter.TaskUserFilter;
+import by.smertex.dto.read.ReadCommentDto;
 import by.smertex.dto.read.ReadTaskDto;
-import by.smertex.dto.update.CreateOrUpdateTaskUserDto;
+import by.smertex.dto.update.CreateOrUpdateUserDto;
+import by.smertex.service.CommentService;
 import by.smertex.service.TaskService;
 import by.smertex.util.ApiPath;
 import by.smertex.util.ResponseMessage;
@@ -24,21 +27,30 @@ public class UserController {
 
     private final TaskService taskService;
 
+    private final CommentService commentService;
+
     @GetMapping
     public List<ReadTaskDto> findAllByToken(@RequestBody TaskUserFilter filter,
                                             Pageable pageable){
         return taskService.findAllByTokenAndFilter(filter, pageable);
     }
 
-    @PutMapping("/{id}")
+    @GetMapping(ApiPath.COMMENT_PATH)
+    public List<ReadCommentDto> findAllComment(@PathVariable UUID id,
+                                         @Validated @RequestBody CommentFilter filter,
+                                         Pageable pageable){
+        return commentService.findAllByFilter(id, filter, pageable);
+    }
+
+    @PutMapping(ApiPath.ID_PATH)
     public ReadTaskDto updateTask(@PathVariable UUID id,
-                                  @Validated @RequestBody CreateOrUpdateTaskUserDto dto){
-        return taskService.updateTask(id, dto)
+                                  @Validated @RequestBody CreateOrUpdateUserDto dto){
+        return taskService.update(id, dto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.UPDATE_TASK_NOT_FOUND));
     }
 
     @PostMapping
-    public ReadTaskDto create(@Validated @RequestBody CreateOrUpdateTaskUserDto dto){
+    public ReadTaskDto create(@Validated @RequestBody CreateOrUpdateUserDto dto){
         return taskService.save(dto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ResponseMessage.CREATE_TASK_EXCEPTION));
     }

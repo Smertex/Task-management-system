@@ -2,18 +2,18 @@ package by.smertex.mapper;
 
 import by.smertex.database.entity.Task;
 import by.smertex.database.repository.UserRepository;
-import by.smertex.dto.update.CreateOrUpdateTaskUserDto;
+import by.smertex.dto.update.CreateOrUpdateUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CreateOrUpdateTaskDtoToTaskMapper implements Mapper<CreateOrUpdateTaskUserDto, Task>{
+public class CreateOrUpdateTaskDtoToTaskMapper implements Mapper<CreateOrUpdateUserDto, Task>{
 
     private final UserRepository userRepository;
 
     @Override
-    public Task map(CreateOrUpdateTaskUserDto from) {
+    public Task map(CreateOrUpdateUserDto from) {
         Task task = copy(from, new Task());
         userRepository.findByEmail(from.performerEmail())
                 .ifPresent(task::setPerformer);
@@ -21,11 +21,11 @@ public class CreateOrUpdateTaskDtoToTaskMapper implements Mapper<CreateOrUpdateT
     }
 
     @Override
-    public Task map(CreateOrUpdateTaskUserDto from, Task to){
+    public Task map(CreateOrUpdateUserDto from, Task to){
         return copy(from, to);
     }
 
-    private Task copy(CreateOrUpdateTaskUserDto from, Task to){
+    private Task copy(CreateOrUpdateUserDto from, Task to){
         to.setName(from.name());
         to.setDescription(from.description());
         to.setStatus(from.status());

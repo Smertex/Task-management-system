@@ -38,11 +38,11 @@ public class SecurityConfiguration {
                 .cors(CorsConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(ApiPath.ADMIN_PATH).hasRole(Role.ADMIN.getAuthority())
-//                        .requestMatchers(ApiPath.SWAGGER_PATH, ApiPath.SWAGGER_DOCS_PATH, ApiPath.AUTH_PATH).anonymous()
-//                        .anyRequest().authenticated()
-//                )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(ApiPath.ADMIN_PATH).hasRole(Role.ADMIN.getAuthority())
+                        .requestMatchers(ApiPath.SWAGGER_PATH, ApiPath.SWAGGER_DOCS_PATH, ApiPath.AUTH_PATH).anonymous()
+                        .anyRequest().authenticated()
+                )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)

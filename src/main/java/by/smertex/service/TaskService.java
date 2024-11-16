@@ -10,7 +10,7 @@ import by.smertex.dto.filter.TaskAdminFilter;
 import by.smertex.dto.filter.TaskUserFilter;
 import by.smertex.dto.filter.UserFilter;
 import by.smertex.dto.read.ReadTaskDto;
-import by.smertex.dto.update.CreateOrUpdateTaskUserDto;
+import by.smertex.dto.update.CreateOrUpdateUserDto;
 import by.smertex.mapper.CreateOrUpdateTaskDtoToTaskMapper;
 import by.smertex.mapper.TaskToReadTaskDtoMapper;
 import lombok.RequiredArgsConstructor;
@@ -54,16 +54,16 @@ public class TaskService {
                 .add(filter.createdAt(), QTask.task.metaInfo.createdAt::eq)
                 .add(filter.closedAt(), QTask.task.metaInfo.closeAt::eq)
                 .add(filter.status(), QTask.task.status::eq)
-                .add(filter.priority(), QTask.task.priority::eq)
-                .add(((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal()), QTask.task.performer.email::eq);
+                .add(filter.priority(), QTask.task.priority::eq);
         userFilterToTaskPredicate(qPredicate, filter.createdBy());
         return taskRepository.findAll(qPredicate.buildAnd(), pageable)
+                .filter(this::hasAccess)
                 .map(taskToReadTaskDtoMapper::map)
                 .toList();
     }
 
     @Transactional
-    public Optional<ReadTaskDto> updateTask(UUID id, CreateOrUpdateTaskUserDto dto) {
+    public Optional<ReadTaskDto> update(UUID id, CreateOrUpdateUserDto dto) {
         return taskRepository.findById(id)
                 .filter(this::hasAccess)
                 .map(task -> createOrUpdateTaskDtoToTaskMapper.map(dto, task))
@@ -72,7 +72,7 @@ public class TaskService {
     }
 
     @Transactional
-    public Optional<ReadTaskDto> save(CreateOrUpdateTaskUserDto dto){
+    public Optional<ReadTaskDto> save(CreateOrUpdateUserDto dto){
         return Optional.of(dto)
                 .map(element -> {
                     Task task = createOrUpdateTaskDtoToTaskMapper.map(element);

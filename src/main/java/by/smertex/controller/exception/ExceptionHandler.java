@@ -1,9 +1,7 @@
 package by.smertex.controller.exception;
 
 import by.smertex.dto.exception.ResponseException;
-import io.jsonwebtoken.JwtException;
 import jakarta.annotation.Nullable;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,11 +31,4 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(new ResponseException(exception.getMessage(), HttpStatus.CONFLICT, LocalDateTime.now()));
     }
-
-    @org.springframework.web.bind.annotation.ExceptionHandler(JwtException.class)
-    public ResponseEntity<ResponseException> jwtAuthorizeException(JwtException exception, HttpServletRequest request){
-        return ResponseEntity.badRequest()
-                .body(new ResponseException(exception.getMessage(), HttpStatus.UNAUTHORIZED, LocalDateTime.now()));
-    }
-
 }
