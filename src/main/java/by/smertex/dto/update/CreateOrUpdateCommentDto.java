@@ -1,5 +1,7 @@
 package by.smertex.dto.update;
 
-public record CreateOrUpdateCommentDto(String message,
-                                       String name) {
+import lombok.Builder;
+
+@Builder
+public record CreateOrUpdateCommentDto(String content) {
 }

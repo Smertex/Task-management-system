@@ -6,21 +6,24 @@ import by.smertex.database.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @IT
 @RequiredArgsConstructor
 public class UserRepositoryIT {
+
+    private static final String USER_EMAIL_TEST = "smertexx@gmail.com";
+
     private final UserRepository userRepository;
 
-    /**
-     * Проверка корреткности работы маппинга User
-     */
     @Test
-    void findAll(){
-        List<User> users = userRepository.findAll();
-        assertThat(users).hasSize(2);
+    void findByEmail(){
+        Optional<User> user = userRepository.findByEmail(USER_EMAIL_TEST);
+        assertFalse(user.isEmpty());
+        user.ifPresent(el -> assertEquals(el.getEmail(), USER_EMAIL_TEST));
     }
+
 }

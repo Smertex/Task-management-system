@@ -4,7 +4,7 @@ import by.smertex.dto.filter.CommentFilter;
 import by.smertex.dto.filter.TaskFilter;
 import by.smertex.dto.read.ReadCommentDto;
 import by.smertex.dto.read.ReadTaskDto;
-import by.smertex.dto.update.CreateOrUpdateUserDto;
+import by.smertex.dto.update.CreateOrUpdateTaskDto;
 import by.smertex.service.CommentService;
 import by.smertex.service.TaskService;
 import by.smertex.util.ApiPath;
@@ -30,7 +30,7 @@ public class UserController {
     private final CommentService commentService;
 
     @GetMapping
-    public List<ReadTaskDto> findAllByToken(@RequestBody TaskFilter filter,
+    public List<ReadTaskDto> findAllByToken(@RequestBody @Validated TaskFilter filter,
                                             Pageable pageable){
         return taskService.findAllByFilter(filter, pageable);
     }
@@ -44,13 +44,13 @@ public class UserController {
 
     @PutMapping(ApiPath.ID_PATH)
     public ReadTaskDto updateTask(@PathVariable UUID id,
-                                  @Validated @RequestBody CreateOrUpdateUserDto dto){
+                                  @Validated @RequestBody CreateOrUpdateTaskDto dto){
         return taskService.update(id, dto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.UPDATE_TASK_NOT_FOUND));
     }
 
     @PostMapping
-    public ReadTaskDto create(@Validated @RequestBody CreateOrUpdateUserDto dto){
+    public ReadTaskDto create(@Validated @RequestBody CreateOrUpdateTaskDto dto){
         return taskService.save(dto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ResponseMessage.CREATE_TASK_EXCEPTION));
     }

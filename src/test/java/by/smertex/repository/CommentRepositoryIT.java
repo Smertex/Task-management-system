@@ -2,87 +2,111 @@ package by.smertex.repository;
 
 import by.smertex.annotation.IT;
 import by.smertex.database.entity.Comment;
-import by.smertex.database.entity.QComment;
 import by.smertex.database.entity.Task;
-import by.smertex.database.entity.User;
 import by.smertex.database.repository.CommentRepository;
 import by.smertex.database.repository.TaskRepository;
-import by.smertex.database.repository.UserRepository;
-import by.smertex.database.repository.filter.QPredicateImpl;
 import by.smertex.dto.filter.CommentFilter;
+import by.smertex.dto.filter.UserFilter;
+import by.smertex.dto.security.SecurityUserDto;
+import by.smertex.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @IT
 @RequiredArgsConstructor
+@ExtendWith(MockitoExtension.class)
 public class CommentRepositoryIT {
 
-    private final UUID USER_TEST_ID = UUID.fromString("11d1b3a8-0def-4a8a-b00f-b51c43cd14e3");
+    private static final String USER_TEST_EMAIL = "evgenii@gmail.com";
 
-    private final UUID TASK_TEST_ID = UUID.fromString("5f0288e7-301b-416b-af58-dd433667a607");
+    private static final String ADMIN_TEST_EMAIL = "smertexx@gmail.com";
+
+    private static final UUID TEST_TASK_ID = UUID.fromString("a9099b32-e5b2-41aa-9ab6-d4d461549c70");
+
+    private static final Integer PAGE_NUMBER = 0;
+
+    private static final Integer PAGE_SIZE = 2;
 
     private final CommentRepository commentRepository;
 
-    private final UserRepository userRepository;
-
     private final TaskRepository taskRepository;
 
+    @Mock
+    private final AuthService authService;
+
     /**
-     * Поиск комментария через создателя
+     * Проверка фильтрации и пагинации у администратора,а
+     * также ограничения на получения комментариев из заданий, где он не является исполнителем
      */
     @Test
-    @SuppressWarnings("all")
-    void findByUser(){
-//        Optional<User> optionalUser = userRepository.findById(USER_TEST_ID);
-//
-//        assertTrue(optionalUser.isPresent());
-//
-//        User user = optionalUser.get();
-//
-//        CommentFilter commentFilter = CommentFilter.builder()
-//                .createdBy(user)
-//                .build();
-//
-//        List<Comment> comments = commentRepository.findAll(QPredicateImpl.builder()
-//                .add(commentFilter.createdBy(), QComment.comment.createdBy::eq)
-//                .buildAnd(), PageRequest.of(0, 2)).getContent();
-//
-//        assertThat(comments).hasSize(2);
-//
-//        comments.forEach(comment -> assertEquals(comment.getCreatedBy(), user));
+    void findAllByFilterForAdmin(){
+        Mockito.doReturn(Optional.of(new SecurityUserDto(ADMIN_TEST_EMAIL, true)))
+                .when(authService)
+                .takeUserFromContext();
+
+        CommentFilter filter = CommentFilter.builder()
+                .createdBy(UserFilter.builder()
+                        .email(USER_TEST_EMAIL)
+                        .build())
+                .build();
+
+        Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
+
+        List<Comment> comments = commentRepository.findAllByFilter(TEST_TASK_ID, filter, authService.takeUserFromContext().orElseThrow(), pageable);
+
+        assert comments.size() <= PAGE_SIZE;
+
+        Task task = taskRepository.findById(TEST_TASK_ID)
+                .orElseThrow();
+
+        comments.stream()
+                .peek(comment -> assertNotEquals(task.getPerformer().getEmail(), authService.takeUserFromContext()
+                        .orElseThrow().email()))
+                .forEach(comment -> assertEquals(filter.createdBy().email(), comment.getCreatedBy().getEmail()));
     }
 
     /**
-     * Поиск комментария через таск
+     * Проверка фильтрации и пагинации у пользователя,а
+     * также ограничения на получения комментариев из заданий, где он не является исполнителем
      */
     @Test
-    @SuppressWarnings("all")
-    void findByTask(){
-//        Optional<Task> optionalTask = taskRepository.findById(TASK_TEST_ID);
-//
-//        assertTrue(optionalTask.isPresent());
-//
-//        Task task = optionalTask.get();
-//
-//        CommentFilter commentFilter = CommentFilter.builder()
-//                .from(task)
-//                .build();
-//
-//        List<Comment> comments = commentRepository.findAll(QPredicateImpl.builder()
-//                .add(commentFilter.from(), QComment.comment.task::eq)
-//                .buildAnd(), PageRequest.of(0, 2)).getContent();
-//
-//        assertThat(comments).hasSize(2);
-//
-//        comments.forEach(comment -> assertEquals(comment.getTask(), task));
+    void findAllByFilterForUser(){
+        Mockito.doReturn(Optional.of(new SecurityUserDto(USER_TEST_EMAIL, false)))
+                .when(authService)
+                .takeUserFromContext();
+
+        CommentFilter filter = CommentFilter.builder()
+                .createdBy(UserFilter.builder()
+                        .email(USER_TEST_EMAIL)
+                        .build())
+                .build();
+
+        Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
+
+        List<Comment> comments = commentRepository.findAllByFilter(TEST_TASK_ID, filter, authService.takeUserFromContext().orElseThrow(), pageable);
+        Task task = taskRepository.findById(TEST_TASK_ID)
+                .orElseThrow();
+
+        assert comments.size() <= PAGE_SIZE;
+
+        comments.stream()
+                .peek(comment -> assertEquals(task.getPerformer().getEmail(), authService.takeUserFromContext()
+                        .orElseThrow().email()))
+                .forEach(comment -> assertEquals(filter.createdBy().email(), comment.getCreatedBy().getEmail()));
     }
+
+
 }

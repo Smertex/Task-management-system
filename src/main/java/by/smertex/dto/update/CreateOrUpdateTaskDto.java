@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record CreateOrUpdateUserDto(@NotNull String name,
+public record CreateOrUpdateTaskDto(@NotNull String name,
                                     @NotNull Status status,
                                     @NotNull Priority priority,
                                     @NotNull String description,

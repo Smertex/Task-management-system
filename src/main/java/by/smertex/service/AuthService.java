@@ -18,6 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
@@ -40,13 +42,10 @@ public class AuthService {
         return ResponseEntity.ok(token);
     }
 
-
-    public SecurityUserDto takeUserFromContext(){
+    public Optional<SecurityUserDto> takeUserFromContext(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return SecurityUserDto.builder()
-                .email((String) authentication.getPrincipal())
-                .isAdmin(authentication.getAuthorities().stream()
-                        .anyMatch(role -> role.getAuthority().equals(Role.ADMIN.getEditedRole())))
-                .build();
+        return Optional.of(new SecurityUserDto(
+                (String) authentication.getPrincipal(),
+                authentication.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals(Role.ADMIN.getEditedRole()))));
     }
 }

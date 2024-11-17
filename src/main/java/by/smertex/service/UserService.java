@@ -16,8 +16,6 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final UserToReadUserDtoMapper userToReadUserDtoMapper;
-
     public Optional<User> findByEmail(String email){
         return userRepository.findByEmail(email);
     }

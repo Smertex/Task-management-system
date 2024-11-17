@@ -1,152 +1,81 @@
 package by.smertex.repository;
 
 import by.smertex.annotation.IT;
+import by.smertex.database.entity.Task;
+import by.smertex.database.entity.enums.Priority;
+import by.smertex.database.entity.enums.Status;
 import by.smertex.database.repository.TaskRepository;
-import by.smertex.database.repository.UserRepository;
+import by.smertex.dto.filter.TaskFilter;
+import by.smertex.dto.filter.UserFilter;
+import by.smertex.dto.security.SecurityUserDto;
+import by.smertex.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @IT
 @RequiredArgsConstructor
+@ExtendWith(MockitoExtension.class)
 public class TaskRepositoryIT {
-    private static final UUID USER_TEST_ID = UUID.fromString("11d1b3a8-0def-4a8a-b00f-b51c43cd14e3");
 
-    private static final String USER_EMAIL_TEST = "evgenii@gmail.com";
+    private static final String USER_TEST_EMAIL = "evgenii@gmail.com";
+
+    private static final String ADMIN_TEST_EMAIL = "smertexx@gmail.com";
+
+    private static final UUID TEST_TASK_ID = UUID.fromString("a9099b32-e5b2-41aa-9ab6-d4d461549c70");
+
+    private static final Integer PAGE_NUMBER = 0;
+
+    private static final Integer PAGE_SIZE = 2;
 
     private final TaskRepository taskRepository;
 
-    private final UserRepository userRepository;
+    @Mock
+    private final AuthService authService;
 
-    /**
-     * Поиск задач по автору с учетом пагинации
-     */
+
     @Test
-    @SuppressWarnings("all")
-    void findAllByAuthor(){
-//        Optional<User> optionalUser = userRepository.findById(USER_TEST_ID);
-//
-//        assertTrue(optionalUser.isPresent());
-//
-//        User user = optionalUser.get();
-//
-//        TaskAdminFilter taskAdminFilter = TaskAdminFilter.builder()
-//                .createdBy(user)
-//                .build();
-//        List<Task> tasks = taskRepository.findAll(QPredicateImpl.builder()
-//                .add(taskAdminFilter.createdBy(), QTask.task.metaInfo.createdBy::eq)
-//                .buildAnd(), PageRequest.of(0, 2)).getContent();
-//
-//        assertThat(tasks).hasSize(2);
-//        tasks.forEach(task -> assertEquals(task.getMetaInfo().getCreatedBy(), user));
+    void findAllByFilterUser(){
+        Mockito.doReturn(Optional.of(new SecurityUserDto(USER_TEST_EMAIL, false)))
+                .when(authService)
+                .takeUserFromContext();
+        TaskFilter filter = TaskFilter.builder()
+                .createdBy(new UserFilter(null, null))
+                .status(Status.WAITING)
+                .performer(new UserFilter(null, null))
+                .priority(Priority.LOWEST)
+                .build();
+        Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
+
+        List<Task> tasks = taskRepository.findAllByFilter(filter, authService.takeUserFromContext().orElseThrow(), pageable);
+
+        assert tasks.size() <= PAGE_SIZE;
+
+        tasks.stream()
+                .peek(task -> assertEquals(task.getPerformer().getEmail(), USER_TEST_EMAIL))
+                .peek(task -> assertEquals(task.getStatus(), filter.status()))
+                .forEach(task -> assertEquals(task.getPriority(), filter.priority()));
+
     }
 
-    /**
-     * Поиск задач по исполнителю с учетом пагинации
-     */
     @Test
-    @SuppressWarnings("all")
-    void findAllByPerformer(){
-//        Optional<User> optionalUser = userRepository.findById(USER_TEST_ID);
-//
-//        assertTrue(optionalUser.isPresent());
-//
-//        User user = optionalUser.get();
-//
-//        TaskAdminFilter taskAdminFilter = TaskAdminFilter.builder()
-//                .performer(user)
-//                .build();
-//        List<Task> tasks = taskRepository.findAll(QPredicateImpl.builder()
-//                .add(taskAdminFilter.performer(), QTask.task.performer::eq)
-//                .buildAnd(), PageRequest.of(0, 2)).getContent();
-//
-//        assertThat(tasks).hasSize(1);
-//        tasks.forEach(task -> assertEquals(task.getPerformer(), user));
-    }
+    void findAllByFilterAdmin(){
+        Mockito.doReturn(Optional.of(new SecurityUserDto(USER_TEST_EMAIL, false)))
+                .when(authService)
+                .takeUserFromContext();
 
-    /**
-     * Поиск комментариев задачи по автору с учетом пагинации
-     */
-    @Test
-    @SuppressWarnings("all")
-    void findAllCommentFromTaskByPerformer(){
-//        Optional<User> optionalUser = userRepository.findById(USER_TEST_ID);
-//
-//        assertTrue(optionalUser.isPresent());
-//
-//        User user = optionalUser.get();
-//
-//        TaskAdminFilter taskAdminFilter = TaskAdminFilter.builder()
-//                .createdBy(user)
-//                .build();
-//        List<Task> tasks = taskRepository.findAll(QPredicateImpl.builder()
-//                .add(taskAdminFilter.createdBy(), QTask.task.metaInfo.createdBy::eq)
-//                .buildAnd(), PageRequest.of(0, 2))
-//                .getContent();
-//
-//        assertThat(tasks).hasSize(2);
-//
-//        assertEquals(tasks.get(0).getComments().size(), 0);
-//        assertEquals(tasks.get(1).getComments().size(), 2);
-    }
+        System.out.println(authService.takeUserFromContext().orElseThrow());
 
-    /**
-     * Поиск по нескольким параметрам
-     */
-    @Test
-    @SuppressWarnings("all")
-    void findAllByFilter(){
-//        Optional<User> optionalUser = userRepository.findById(USER_TEST_ID);
-//
-//        assertTrue(optionalUser.isPresent());
-//
-//        User user = optionalUser.get();
-//
-//        TaskAdminFilter taskAdminFilter = TaskAdminFilter.builder()
-//                .createdBy(user)
-//                .status(Status.WAITING)
-//                .priority(Priority.LOWEST)
-//                .build();
-//        List<Task> tasks = taskRepository.findAll(QPredicateImpl.builder()
-//                .add(taskAdminFilter.createdBy(), QTask.task.metaInfo.createdBy::eq)
-//                .add(taskAdminFilter.status(), QTask.task.status::eq)
-//                .add(taskAdminFilter.priority(), QTask.task.priority::eq)
-//                .buildAnd(), PageRequest.of(0, 2))
-//                .getContent();
-//
-//        assertThat(tasks).hasSize(1);
-//
-//        Task task = tasks.get(0);
-//
-//        assertEquals(task.getMetaInfo().getCreatedBy(), taskAdminFilter.createdBy());
-//        assertEquals(task.getStatus(), taskAdminFilter.status());
-//        assertEquals(task.getPriority(), taskAdminFilter.priority());
-    }
-
-    /**
-     * Поиск по email с учетом фильтрации и пагинации
-     */
-    @Test
-    void findAllByPerformerUsername(){
-//        TaskUserFilter taskUserFilter = TaskUserFilter.builder()
-//                .status(Status.WAITING)
-//                .priority(Priority.LOWEST)
-//                .build();
-//
-//        Predicate predicate = QPredicateImpl.builder()
-//                .add(taskUserFilter.createdBy(), QTask.task.metaInfo.createdBy::eq)
-//                .add(taskUserFilter.status(), QTask.task.status::eq)
-//                .add(taskUserFilter.priority(), QTask.task.priority::eq)
-//                .add(USER_EMAIL_TEST, QTask.task.performer.email::eq)
-//                .buildAnd();
-//
-//        Pageable pageable = PageRequest.of(0, 2);
-//        List<Task> tasks = taskRepository.findAll(predicate, pageable).getContent();
-//
-//        tasks.forEach(task -> assertEquals(task.getPerformer().getEmail(), USER_EMAIL_TEST));
     }
 }
