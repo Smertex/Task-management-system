@@ -2,7 +2,6 @@ package by.smertex.annotation;
 
 import by.smertex.TaskManagementSystemApplication;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestConstructor;

@@ -1,7 +1,6 @@
 package by.smertex.mapper;
 
 import by.smertex.database.entity.Task;
-import by.smertex.database.repository.UserRepository;
 import by.smertex.dto.update.CreateOrUpdateTaskDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -2,7 +2,6 @@ package by.smertex.service;
 
 import by.smertex.database.entity.User;
 import by.smertex.database.repository.UserRepository;
-import by.smertex.mapper.UserToReadUserDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
