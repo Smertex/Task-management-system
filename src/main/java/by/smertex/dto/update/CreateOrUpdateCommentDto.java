@@ -1,7 +1,8 @@
 package by.smertex.dto.update;
 
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 @Builder
-public record CreateOrUpdateCommentDto(String content) {
+public record CreateOrUpdateCommentDto(@Size(min = 1) String content) {
 }

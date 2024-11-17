@@ -4,6 +4,7 @@ import by.smertex.dto.filter.CommentFilter;
 import by.smertex.dto.filter.TaskFilter;
 import by.smertex.dto.read.ReadCommentDto;
 import by.smertex.dto.read.ReadTaskDto;
+import by.smertex.dto.update.CreateOrUpdateCommentDto;
 import by.smertex.dto.update.CreateOrUpdateTaskDto;
 import by.smertex.service.CommentService;
 import by.smertex.service.TaskService;
@@ -29,29 +30,43 @@ public class UserController {
 
     private final CommentService commentService;
 
-    @GetMapping
-    public List<ReadTaskDto> findAllByToken(@RequestBody @Validated TaskFilter filter,
-                                            Pageable pageable){
+    @GetMapping(ApiPath.TASK_PATH)
+    public List<ReadTaskDto> findAll(@RequestBody @Validated TaskFilter filter,
+                                                             Pageable pageable){
         return taskService.findAllByFilter(filter, pageable);
     }
 
-    @GetMapping(ApiPath.COMMENT_PATH)
-    public List<ReadCommentDto> findAllComment(@PathVariable UUID id,
-                                         @Validated @RequestBody CommentFilter filter,
-                                         Pageable pageable){
-        return commentService.findAllByFilter(id, filter, pageable);
+    @PostMapping(ApiPath.TASK_PATH)
+    public ReadTaskDto create(@Validated @RequestBody CreateOrUpdateTaskDto dto){
+        return taskService.save(dto)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ResponseMessage.CREATE_TASK_EXCEPTION));
     }
 
-    @PutMapping(ApiPath.ID_PATH)
+    @PutMapping(ApiPath.ID_TASK_PATH)
     public ReadTaskDto updateTask(@PathVariable UUID id,
                                   @Validated @RequestBody CreateOrUpdateTaskDto dto){
         return taskService.update(id, dto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.UPDATE_TASK_NOT_FOUND));
     }
 
-    @PostMapping
-    public ReadTaskDto create(@Validated @RequestBody CreateOrUpdateTaskDto dto){
-        return taskService.save(dto)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ResponseMessage.CREATE_TASK_EXCEPTION));
+    @GetMapping(ApiPath.COMMENT_IN_TASK_PATH)
+    public List<ReadCommentDto> findAllComment(@PathVariable UUID id,
+                                               @Validated @RequestBody CommentFilter filter,
+                                         Pageable pageable){
+        return commentService.findAllByFilter(id, filter, pageable);
+    }
+
+    @PostMapping(ApiPath.COMMENT_IN_TASK_PATH)
+    public ReadCommentDto addComment(@PathVariable UUID id,
+                                     @Validated @RequestBody CreateOrUpdateCommentDto dto){
+        return commentService.add(id, dto)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ResponseMessage.ADD_COMMENT_EXCEPTION));
+    }
+
+    @PutMapping(ApiPath.COMMENT_UPDATE_PATH)
+    public ReadCommentDto updateComment(@PathVariable UUID id,
+                                        @Validated @RequestBody CreateOrUpdateCommentDto dto){
+        return commentService.update(id, dto)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ResponseMessage.UPDATE_COMMENT_EXCEPTION));
     }
 }

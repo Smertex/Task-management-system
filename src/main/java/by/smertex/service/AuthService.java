@@ -2,7 +2,7 @@ package by.smertex.service;
 
 import by.smertex.database.entity.enums.Role;
 import by.smertex.dto.security.JwtRequest;
-import by.smertex.dto.security.AppError;
+import by.smertex.dto.security.AppResponse;
 import by.smertex.dto.security.SecurityUserDto;
 import by.smertex.util.JwtTokenUtils;
 import by.smertex.util.ResponseMessage;
@@ -35,7 +35,7 @@ public class AuthService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(), ResponseMessage.UNAUTHORIZED_USER), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new AppResponse(HttpStatus.UNAUTHORIZED.value(), ResponseMessage.UNAUTHORIZED_USER), HttpStatus.UNAUTHORIZED);
         }
         UserDetails userDetails = loadUserService.loadUserByUsername(authRequest.username());
         String token = jwtTokenUtils.generateToken(userDetails);

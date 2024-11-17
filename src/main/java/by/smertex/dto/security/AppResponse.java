@@ -1,18 +1,20 @@
 package by.smertex.dto.security;
 
 import lombok.Data;
+import lombok.Value;
 
 import java.util.Date;
 
 @Data
-public class AppError {
-    private int status;
+@Value
+public class AppResponse {
+    int status;
 
-    private String message;
+    String message;
 
-    private Date timestamp;
+    Date timestamp;
 
-    public AppError(int status, String message){
+    public AppResponse(int status, String message){
         this.status = status;
         this.message = message;
         this.timestamp = new Date();
