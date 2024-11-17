@@ -30,11 +30,11 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 @ExtendWith(MockitoExtension.class)
 public class CommentRepositoryIT {
 
-    private static final String USER_TEST_EMAIL = "evgenii@gmail.com";
+    private static final String USER_EMAIL_TEST = "evgenii@gmail.com";
 
-    private static final String ADMIN_TEST_EMAIL = "smertexx@gmail.com";
+    private static final String ADMIN_EMAIL_TEST = "smertexx@gmail.com";
 
-    private static final UUID TEST_TASK_ID = UUID.fromString("a9099b32-e5b2-41aa-9ab6-d4d461549c70");
+    private static final UUID TASK_ID_TEST = UUID.fromString("a9099b32-e5b2-41aa-9ab6-d4d461549c70");
 
     private static final Integer PAGE_NUMBER = 0;
 
@@ -53,23 +53,23 @@ public class CommentRepositoryIT {
      */
     @Test
     void findAllByFilterForAdmin(){
-        Mockito.doReturn(Optional.of(new SecurityUserDto(ADMIN_TEST_EMAIL, true)))
+        Mockito.doReturn(Optional.of(new SecurityUserDto(ADMIN_EMAIL_TEST, true)))
                 .when(authService)
                 .takeUserFromContext();
 
         CommentFilter filter = CommentFilter.builder()
                 .createdBy(UserFilter.builder()
-                        .email(USER_TEST_EMAIL)
+                        .email(USER_EMAIL_TEST)
                         .build())
                 .build();
 
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
-        List<Comment> comments = commentRepository.findAllByFilter(TEST_TASK_ID, filter, authService.takeUserFromContext().orElseThrow(), pageable);
+        List<Comment> comments = commentRepository.findAllByFilter(TASK_ID_TEST, filter, authService.takeUserFromContext().orElseThrow(), pageable);
 
         assert comments.size() <= PAGE_SIZE;
 
-        Task task = taskRepository.findById(TEST_TASK_ID)
+        Task task = taskRepository.findById(TASK_ID_TEST)
                 .orElseThrow();
 
         comments.stream()
@@ -84,20 +84,20 @@ public class CommentRepositoryIT {
      */
     @Test
     void findAllByFilterForUser(){
-        Mockito.doReturn(Optional.of(new SecurityUserDto(USER_TEST_EMAIL, false)))
+        Mockito.doReturn(Optional.of(new SecurityUserDto(USER_EMAIL_TEST, false)))
                 .when(authService)
                 .takeUserFromContext();
 
         CommentFilter filter = CommentFilter.builder()
                 .createdBy(UserFilter.builder()
-                        .email(USER_TEST_EMAIL)
+                        .email(USER_EMAIL_TEST)
                         .build())
                 .build();
 
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
-        List<Comment> comments = commentRepository.findAllByFilter(TEST_TASK_ID, filter, authService.takeUserFromContext().orElseThrow(), pageable);
-        Task task = taskRepository.findById(TEST_TASK_ID)
+        List<Comment> comments = commentRepository.findAllByFilter(TASK_ID_TEST, filter, authService.takeUserFromContext().orElseThrow(), pageable);
+        Task task = taskRepository.findById(TASK_ID_TEST)
                 .orElseThrow();
 
         assert comments.size() <= PAGE_SIZE;

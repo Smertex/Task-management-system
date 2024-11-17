@@ -44,12 +44,12 @@ public class CommentService {
 
     @Transactional
     public Optional<ReadCommentDto> add(UUID taskId, CreateOrUpdateCommentDto dto){
-        return Optional.of(dto)
-                .map(element -> {
+        SecurityUserDto user = authService.takeUserFromContext().orElseThrow();
+        return taskService.findById(taskId)
+                .filter(task -> user.isAdmin() || task.getPerformer().getEmail().equals(user.email()))
+                .map(task -> {
                     Comment comment = createOrUpdateCommentDtoToCommentMapper.map(dto);
-                    comment.setCreatedBy(userService.findByEmail(authService.takeUserFromContext()
-                                    .map(SecurityUserDto::email)
-                                    .orElseThrow())
+                    comment.setCreatedBy(userService.findByEmail(user.email())
                             .orElseThrow());
                     comment.setTask(taskService.findById(taskId)
                             .orElseThrow());
@@ -63,6 +63,7 @@ public class CommentService {
     @Transactional
     public Optional<ReadCommentDto> update(UUID commentId, CreateOrUpdateCommentDto dto){
         return commentRepository.findById(commentId)
+                .filter(comment -> authService.takeUserFromContext().orElseThrow().email().equals(comment.getCreatedBy().getEmail()))
                 .map(comment -> createOrUpdateCommentDtoToCommentMapper.map(dto, comment))
                 .map(commentRepository::saveAndFlush)
                 .map(commentToReadCommentDtoMapper::map);
