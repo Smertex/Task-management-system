@@ -14,5 +14,6 @@ public record TaskFilter(@NotNull UserFilter createdBy,
                          LocalDateTime closedAt,
                          @NotNull UserFilter performer,
                          Status status,
-                         Priority priority) {
+                         Priority priority,
+                         String name) {
 }

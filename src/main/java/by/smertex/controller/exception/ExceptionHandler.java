@@ -13,6 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice(basePackages = "by.smertex.controller")
 public class ExceptionHandler extends ResponseEntityExceptionHandler {
@@ -30,5 +31,11 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ResponseException> repositoryUniqueException(DataIntegrityViolationException exception){
         return ResponseEntity.badRequest()
                 .body(new ResponseException(exception.getMessage(), HttpStatus.CONFLICT, LocalDateTime.now()));
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<ResponseException> incorrectData(NoSuchElementException exception){
+        return ResponseEntity.badRequest()
+                .body(new ResponseException(exception.getMessage(), HttpStatus.BAD_REQUEST, LocalDateTime.now()));
     }
 }

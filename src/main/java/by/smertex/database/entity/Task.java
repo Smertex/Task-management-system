@@ -45,6 +45,6 @@ public class Task implements BaseEntity<UUID>{
     private User performer;
 
     @Builder.Default
-    @OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "task", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 }

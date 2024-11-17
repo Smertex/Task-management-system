@@ -45,20 +45,6 @@ public class TaskService {
     }
 
     @Transactional
-    public Optional<ReadTaskDto> update(UUID id, CreateOrUpdateTaskDto dto) {
-        return taskRepository.findById(id)
-                .filter(this::hasAccess)
-                .map(task -> {
-                    Task update = createOrUpdateTaskDtoToTaskMapper.map(dto, task);
-                    update.setPerformer(userService.findByEmail(dto.performerEmail())
-                            .orElseThrow());
-                    return update;
-                })
-                .map(taskRepository::saveAndFlush)
-                .map(taskToReadTaskDtoMapper::map);
-    }
-
-    @Transactional
     public Optional<ReadTaskDto> save(CreateOrUpdateTaskDto dto){
         return Optional.of(dto)
                 .map(element -> {
@@ -74,7 +60,23 @@ public class TaskService {
     }
 
     @Transactional
+    public Optional<ReadTaskDto> update(UUID id, CreateOrUpdateTaskDto dto) {
+        return taskRepository.findById(id)
+                .filter(this::hasAccess)
+                .map(task -> {
+                    Task update = createOrUpdateTaskDtoToTaskMapper.map(dto, task);
+                    update.setPerformer(userService.findByEmail(dto.performerEmail())
+                            .orElseThrow());
+                    return update;
+                })
+                .map(taskRepository::saveAndFlush)
+                .map(taskToReadTaskDtoMapper::map);
+    }
+
+    @Transactional
     public boolean delete(UUID id){
+        if(!authService.takeUserFromContext().orElseThrow().isAdmin())
+            return false;
         return taskRepository.findById(id)
                 .map(task -> {
                     taskRepository.delete(task);

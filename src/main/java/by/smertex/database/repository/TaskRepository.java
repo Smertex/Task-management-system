@@ -24,6 +24,7 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
            and (:#{#filter.priority} is null or :#{#filter.priority} = t.priority)
            and (:#{#filter.performer.email} is null or :#{#filter.performer.email} = t.performer.email)
            and (:#{#filter.performer.role} is null or :#{#filter.performer.role} = t.performer.role)
+           and (:#{#filter.name} is null or t.name like %:#{#filter.name}%)
            and (:#{#user.email} = t.performer.email or :#{#user.isAdmin} = true)
            """)
     List<Task> findAllByFilter(TaskFilter filter, SecurityUserDto user, Pageable pageable);
