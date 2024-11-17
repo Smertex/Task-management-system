@@ -14,6 +14,7 @@ import by.smertex.util.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -50,9 +51,9 @@ public class TaskController {
     }
 
     @DeleteMapping(ApiPath.ID_TASK_PATH)
-    public AppResponse deleteTask(@PathVariable UUID id){
-        return taskService.delete(id) ? new AppResponse(HttpStatus.OK.value(), ResponseMessage.DELETE_TASK_SUCCESSFULLY) :
-                new AppResponse(HttpStatus.BAD_REQUEST.value(), ResponseMessage.DELETE_TASK_FAILED);
+    public ResponseEntity<AppResponse> deleteTask(@PathVariable UUID id){
+        return taskService.delete(id) ? ResponseEntity.ok(new AppResponse(HttpStatus.OK.value(), ResponseMessage.DELETE_TASK_SUCCESSFULLY)) :
+                ResponseEntity.badRequest().body(new AppResponse(HttpStatus.BAD_REQUEST.value(), ResponseMessage.DELETE_TASK_FAILED));
     }
 
     @GetMapping(ApiPath.COMMENT_IN_TASK_PATH)
