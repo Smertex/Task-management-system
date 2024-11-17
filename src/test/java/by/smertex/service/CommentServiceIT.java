@@ -1,11 +1,9 @@
 package by.smertex.service;
 
 import by.smertex.annotation.IT;
-import by.smertex.database.entity.Task;
 import by.smertex.dto.filter.CommentFilter;
 import by.smertex.dto.filter.UserFilter;
 import by.smertex.dto.read.ReadCommentDto;
-import by.smertex.dto.read.ReadTaskDto;
 import by.smertex.dto.security.SecurityUserDto;
 import by.smertex.dto.update.CreateOrUpdateCommentDto;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +37,6 @@ public class CommentServiceIT {
     private static final UUID TASK_ID_WHERE_PERFORMER_ADMIN_TEST = UUID.fromString("5f0288e7-301b-416b-af58-dd433667a607");
 
     private static final UUID COMMENT_ID_WHERE_CREATOR_USER_TEST = UUID.fromString("e7405417-bbad-45bf-a48a-abfe7a35f785");
-
-    private static final UUID COMMENT_WHERE_CREATOR_ADMIN_TEST = UUID.fromString("41a18d72-a2b3-42e3-bcb8-a0675ee583a0");
 
     private static final Integer SECOND_FROM_CREATION = 10;
 
