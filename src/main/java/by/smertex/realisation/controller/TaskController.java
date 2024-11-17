@@ -6,6 +6,7 @@ import by.smertex.realisation.dto.filter.CommentFilter;
 import by.smertex.realisation.dto.filter.TaskFilter;
 import by.smertex.realisation.dto.read.ReadCommentDto;
 import by.smertex.realisation.dto.read.ReadTaskDto;
+import by.smertex.realisation.dto.security.AppResponse;
 import by.smertex.realisation.dto.update.CreateOrUpdateCommentDto;
 import by.smertex.realisation.dto.update.CreateOrUpdateTaskDto;
 import by.smertex.util.ApiPath;
@@ -20,23 +21,22 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.UUID;
 
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(ApiPath.USER_PATH)
-public class UserController {
+@RequestMapping(ApiPath.TASK_PATH)
+public class TaskController {
 
     private final TaskService taskService;
 
     private final CommentService commentService;
 
-    @GetMapping(ApiPath.TASK_PATH)
+    @GetMapping
     public List<ReadTaskDto> findAll(@RequestBody @Validated TaskFilter filter,
-                                                             Pageable pageable){
+                                     Pageable pageable){
         return taskService.findAllByFilter(filter, pageable);
     }
 
-    @PostMapping(ApiPath.TASK_PATH)
+    @PostMapping
     public ReadTaskDto create(@Validated @RequestBody CreateOrUpdateTaskDto dto){
         return taskService.save(dto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ResponseMessage.CREATE_TASK_EXCEPTION));
@@ -47,6 +47,12 @@ public class UserController {
                                   @Validated @RequestBody CreateOrUpdateTaskDto dto){
         return taskService.update(id, dto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.UPDATE_TASK_NOT_FOUND));
+    }
+
+    @DeleteMapping(ApiPath.ID_TASK_PATH)
+    public AppResponse deleteTask(@PathVariable UUID id){
+        return taskService.delete(id) ? new AppResponse(HttpStatus.OK.value(), ResponseMessage.DELETE_TASK_SUCCESSFULLY) :
+                new AppResponse(HttpStatus.BAD_REQUEST.value(), ResponseMessage.DELETE_TASK_FAILED);
     }
 
     @GetMapping(ApiPath.COMMENT_IN_TASK_PATH)
@@ -69,4 +75,5 @@ public class UserController {
         return commentService.update(id, dto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ResponseMessage.UPDATE_COMMENT_EXCEPTION));
     }
+
 }
