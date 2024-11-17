@@ -1,15 +1,15 @@
 package by.smertex.repository;
 
 import by.smertex.annotation.IT;
-import by.smertex.database.entity.Task;
-import by.smertex.database.entity.enums.Priority;
-import by.smertex.database.entity.enums.Role;
-import by.smertex.database.entity.enums.Status;
-import by.smertex.database.repository.TaskRepository;
-import by.smertex.dto.filter.TaskFilter;
-import by.smertex.dto.filter.UserFilter;
-import by.smertex.dto.security.SecurityUserDto;
-import by.smertex.service.AuthService;
+import by.smertex.realisation.database.entity.Task;
+import by.smertex.realisation.database.entity.enums.Priority;
+import by.smertex.realisation.database.entity.enums.Role;
+import by.smertex.realisation.database.entity.enums.Status;
+import by.smertex.realisation.database.repository.TaskRepository;
+import by.smertex.realisation.dto.filter.TaskFilter;
+import by.smertex.realisation.dto.filter.UserFilter;
+import by.smertex.realisation.dto.security.SecurityUserDto;
+import by.smertex.realisation.service.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +40,7 @@ public class TaskRepositoryIT {
     private final TaskRepository taskRepository;
 
     @Mock
-    private final AuthService authService;
+    private final AuthServiceImpl authServiceImpl;
 
     /**
      * Проверка фильтрации у пользователя, а также ограничения на получения заданий по исполнителю
@@ -48,7 +48,7 @@ public class TaskRepositoryIT {
     @Test
     void findAllByFilterUser(){
         Mockito.doReturn(Optional.of(new SecurityUserDto(USER_EMAIL_TEST, false)))
-                .when(authService)
+                .when(authServiceImpl)
                 .takeUserFromContext();
         TaskFilter filter = TaskFilter.builder()
                 .createdBy(new UserFilter(null, null))
@@ -58,7 +58,7 @@ public class TaskRepositoryIT {
                 .build();
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
-        List<Task> tasks = taskRepository.findAllByFilter(filter, authService.takeUserFromContext().orElseThrow(), pageable);
+        List<Task> tasks = taskRepository.findAllByFilter(filter, authServiceImpl.takeUserFromContext().orElseThrow(), pageable);
 
         tasks.stream()
                 .peek(task -> assertEquals(task.getPerformer().getEmail(), USER_EMAIL_TEST))
@@ -73,7 +73,7 @@ public class TaskRepositoryIT {
     @Test
     void findAllByFilterAdmin(){
         Mockito.doReturn(Optional.of(new SecurityUserDto(ADMIN_EMAIL_TEST, true)))
-                .when(authService)
+                .when(authServiceImpl)
                 .takeUserFromContext();
 
         TaskFilter filter = TaskFilter.builder()
@@ -84,7 +84,7 @@ public class TaskRepositoryIT {
 
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
-        List<Task> tasks = taskRepository.findAllByFilter(filter, authService.takeUserFromContext().orElseThrow(), pageable);
+        List<Task> tasks = taskRepository.findAllByFilter(filter, authServiceImpl.takeUserFromContext().orElseThrow(), pageable);
 
         assertFalse(tasks.isEmpty());
 

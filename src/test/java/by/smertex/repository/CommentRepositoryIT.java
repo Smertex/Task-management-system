@@ -1,14 +1,14 @@
 package by.smertex.repository;
 
 import by.smertex.annotation.IT;
-import by.smertex.database.entity.Comment;
-import by.smertex.database.entity.Task;
-import by.smertex.database.repository.CommentRepository;
-import by.smertex.database.repository.TaskRepository;
-import by.smertex.dto.filter.CommentFilter;
-import by.smertex.dto.filter.UserFilter;
-import by.smertex.dto.security.SecurityUserDto;
-import by.smertex.service.AuthService;
+import by.smertex.realisation.database.entity.Comment;
+import by.smertex.realisation.database.entity.Task;
+import by.smertex.realisation.database.repository.CommentRepository;
+import by.smertex.realisation.database.repository.TaskRepository;
+import by.smertex.realisation.dto.filter.CommentFilter;
+import by.smertex.realisation.dto.filter.UserFilter;
+import by.smertex.realisation.dto.security.SecurityUserDto;
+import by.smertex.realisation.service.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,7 +45,7 @@ public class CommentRepositoryIT {
     private final TaskRepository taskRepository;
 
     @Mock
-    private final AuthService authService;
+    private final AuthServiceImpl authServiceImpl;
 
     /**
      * Проверка фильтрации и пагинации у администратора,а
@@ -54,7 +54,7 @@ public class CommentRepositoryIT {
     @Test
     void findAllByFilterForAdmin(){
         Mockito.doReturn(Optional.of(new SecurityUserDto(ADMIN_EMAIL_TEST, true)))
-                .when(authService)
+                .when(authServiceImpl)
                 .takeUserFromContext();
 
         CommentFilter filter = CommentFilter.builder()
@@ -65,7 +65,7 @@ public class CommentRepositoryIT {
 
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
-        List<Comment> comments = commentRepository.findAllByFilter(TASK_ID_TEST, filter, authService.takeUserFromContext().orElseThrow(), pageable);
+        List<Comment> comments = commentRepository.findAllByFilter(TASK_ID_TEST, filter, authServiceImpl.takeUserFromContext().orElseThrow(), pageable);
 
         assert comments.size() <= PAGE_SIZE;
 
@@ -73,7 +73,7 @@ public class CommentRepositoryIT {
                 .orElseThrow();
 
         comments.stream()
-                .peek(comment -> assertNotEquals(task.getPerformer().getEmail(), authService.takeUserFromContext()
+                .peek(comment -> assertNotEquals(task.getPerformer().getEmail(), authServiceImpl.takeUserFromContext()
                         .orElseThrow().email()))
                 .forEach(comment -> assertEquals(filter.createdBy().email(), comment.getCreatedBy().getEmail()));
     }
@@ -85,7 +85,7 @@ public class CommentRepositoryIT {
     @Test
     void findAllByFilterForUser(){
         Mockito.doReturn(Optional.of(new SecurityUserDto(USER_EMAIL_TEST, false)))
-                .when(authService)
+                .when(authServiceImpl)
                 .takeUserFromContext();
 
         CommentFilter filter = CommentFilter.builder()
@@ -96,14 +96,14 @@ public class CommentRepositoryIT {
 
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
-        List<Comment> comments = commentRepository.findAllByFilter(TASK_ID_TEST, filter, authService.takeUserFromContext().orElseThrow(), pageable);
+        List<Comment> comments = commentRepository.findAllByFilter(TASK_ID_TEST, filter, authServiceImpl.takeUserFromContext().orElseThrow(), pageable);
         Task task = taskRepository.findById(TASK_ID_TEST)
                 .orElseThrow();
 
         assert comments.size() <= PAGE_SIZE;
 
         comments.stream()
-                .peek(comment -> assertEquals(task.getPerformer().getEmail(), authService.takeUserFromContext()
+                .peek(comment -> assertEquals(task.getPerformer().getEmail(), authServiceImpl.takeUserFromContext()
                         .orElseThrow().email()))
                 .forEach(comment -> assertEquals(filter.createdBy().email(), comment.getCreatedBy().getEmail()));
     }

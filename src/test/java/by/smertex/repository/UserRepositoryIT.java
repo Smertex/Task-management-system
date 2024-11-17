@@ -1,8 +1,8 @@
 package by.smertex.repository;
 
 import by.smertex.annotation.IT;
-import by.smertex.database.entity.User;
-import by.smertex.database.repository.UserRepository;
+import by.smertex.realisation.database.entity.User;
+import by.smertex.realisation.database.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
 package by.smertex.config.security;
 
-import by.smertex.dto.exception.ResponseException;
+import by.smertex.realisation.dto.exception.ResponseException;
 import by.smertex.util.JwtTokenUtils;
 import by.smertex.util.ResponseMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
