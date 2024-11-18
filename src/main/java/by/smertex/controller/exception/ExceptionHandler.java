@@ -1,6 +1,7 @@
 package by.smertex.controller.exception;
 
 import by.smertex.dto.exception.ApplicationResponse;
+import by.smertex.util.ResponseMessage;
 import jakarta.annotation.Nullable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,7 +20,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-@RestControllerAdvice(basePackages = "by.smertex.realisation.controller")
+@RestControllerAdvice(basePackages = "by.smertex.controller.realisation")
 public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
@@ -35,7 +36,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApplicationResponse> repositoryUniqueException(DataIntegrityViolationException exception){
         return ResponseEntity.badRequest()
-                .body(new ApplicationResponse(exception.getMessage(), HttpStatus.CONFLICT, LocalDateTime.now()));
+                .body(new ApplicationResponse(ResponseMessage.SAVE_TASk_FAILED_DUE_DUPLICATE, HttpStatus.CONFLICT, LocalDateTime.now()));
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(NoSuchElementException.class)
