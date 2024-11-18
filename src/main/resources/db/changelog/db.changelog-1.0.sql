@@ -1,7 +1,7 @@
 --liquibase formatted sql
 
 --changeset smertex:1
-CREATE TABLE users(
+CREATE TABLE IF NOT EXISTS users(
     id              UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
     email           VARCHAR(256)    UNIQUE NOT NULL,
     password        VARCHAR(256)    NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE users(
 );
 
 --changeset smertex:2
-CREATE TABLE metainfo(
+CREATE TABLE IF NOT EXISTS metainfo(
     id              UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
     created_at      TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     closed_at       TIMESTAMP,
@@ -17,7 +17,7 @@ CREATE TABLE metainfo(
 );
 
 --changeset smertex:3
-CREATE TABLE task(
+CREATE TABLE IF NOT EXISTS task(
     id              UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
     name            VARCHAR(128)    UNIQUE NOT NULL,
     status          VARCHAR(128)    NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE task(
 );
 
 --changeset smertex:4
-CREATE TABLE comment(
+CREATE TABLE IF NOT EXISTS comment(
     id              UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
     task_id         UUID            REFERENCES task(id) NOT NULL,
     content         TEXT            NOT NULL UNIQUE,

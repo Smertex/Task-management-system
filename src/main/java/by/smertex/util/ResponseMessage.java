@@ -11,6 +11,6 @@ public final class ResponseMessage {
     public static final String UPDATE_COMMENT_EXCEPTION = "You don't have permission";
     public static final String DELETE_TASK_SUCCESSFULLY = "Task deleted";
     public static final String DELETE_TASK_FAILED = "The task was not deleted";
-    public static final String SAVE_TASK_FAILED_DUE_DUPLICATE = "A task with the same name already exists";
+    public static final String SAVE_FAILED_DUE_DUPLICATE = "A data with the same name already exists";
     public static final String SAVE_METAINFO_FAILED = "Save metainfo failed";
 }

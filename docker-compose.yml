@@ -1,0 +1,28 @@
+version: '3.1'
+
+volumes:
+  pg_task-management-system:
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=Smertex
+      - POSTGRES_PASSWORD=Xz1g3n41g4j2F4vbsyEbgbmSER4IEHsdf3h
+      - POSTGRES_DB=task-management-system_db
+    volumes:
+      - pg_task-management-system:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5434:5432"
+
+  app:
+    restart: always
+    build: .
+    ports:
+      - "8095:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://db:5432/task-management-system_db'
+      JAVA_OPTS: '-Xmx512m'

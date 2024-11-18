@@ -2,7 +2,7 @@ spring:
   application:
     name: Task-management-system
   datasource:
-    url: jdbc:postgresql://localhost:5432/task-management-system
+    url: jdbc:postgresql://db:5432/task-management-system_db
     username: Smertex
     password: Xz1g3n41g4j2F4vbsyEbgbmSER4IEHsdf3h
     driver-class-name: org.postgresql.Driver

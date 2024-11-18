@@ -36,7 +36,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApplicationResponse> repositoryUniqueException(DataIntegrityViolationException exception){
         return ResponseEntity.badRequest()
-                .body(new ApplicationResponse(ResponseMessage.SAVE_TASK_FAILED_DUE_DUPLICATE, HttpStatus.CONFLICT, LocalDateTime.now()));
+                .body(new ApplicationResponse(ResponseMessage.SAVE_FAILED_DUE_DUPLICATE, HttpStatus.CONFLICT, LocalDateTime.now()));
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(NoSuchElementException.class)

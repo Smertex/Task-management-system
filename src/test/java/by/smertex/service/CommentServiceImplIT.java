@@ -39,7 +39,7 @@ public class CommentServiceImplIT {
 
     private static final UUID TASK_ID_WHERE_PERFORMER_ADMIN_TEST = UUID.fromString("5f0288e7-301b-416b-af58-dd433667a607");
 
-    private static final UUID COMMENT_ID_WHERE_CREATOR_USER_TEST = UUID.fromString("e7405417-bbad-45bf-a48a-abfe7a35f785");
+    private static final UUID COMMENT_ID_WHERE_CREATOR_USER_TEST = UUID.fromString("5e0dc76a-f6d1-44b9-9f6a-259915ceef7c");
 
     private static final Integer SECOND_FROM_CREATION = 10;
 
