@@ -15,10 +15,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -65,9 +65,9 @@ public class CommentRepositoryIT {
 
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
-        List<Comment> comments = commentRepository.findAllByFilter(TASK_ID_TEST, filter, authServiceImpl.takeUserFromContext().orElseThrow(), pageable);
+        Page<Comment> comments = commentRepository.findAllByFilter(TASK_ID_TEST, filter, authServiceImpl.takeUserFromContext().orElseThrow(), pageable);
 
-        assert comments.size() <= PAGE_SIZE;
+        assert comments.getContent().size() <= PAGE_SIZE;
 
         Task task = taskRepository.findById(TASK_ID_TEST)
                 .orElseThrow();
@@ -96,11 +96,11 @@ public class CommentRepositoryIT {
 
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
-        List<Comment> comments = commentRepository.findAllByFilter(TASK_ID_TEST, filter, authServiceImpl.takeUserFromContext().orElseThrow(), pageable);
+        Page<Comment> comments = commentRepository.findAllByFilter(TASK_ID_TEST, filter, authServiceImpl.takeUserFromContext().orElseThrow(), pageable);
         Task task = taskRepository.findById(TASK_ID_TEST)
                 .orElseThrow();
 
-        assert comments.size() <= PAGE_SIZE;
+        assert comments.getContent().size() <= PAGE_SIZE;
 
         comments.stream()
                 .peek(comment -> assertEquals(task.getPerformer().getEmail(), authServiceImpl.takeUserFromContext()

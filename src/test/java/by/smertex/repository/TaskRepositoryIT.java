@@ -16,10 +16,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,7 +58,7 @@ public class TaskRepositoryIT {
                 .build();
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
-        List<Task> tasks = taskRepository.findAllByFilter(filter, authServiceImpl.takeUserFromContext().orElseThrow(), pageable);
+        Page<Task> tasks = taskRepository.findAllByFilter(filter, authServiceImpl.takeUserFromContext().orElseThrow(), pageable);
 
         tasks.stream()
                 .peek(task -> assertEquals(task.getPerformer().getEmail(), USER_EMAIL_TEST))
@@ -84,7 +84,7 @@ public class TaskRepositoryIT {
 
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
-        List<Task> tasks = taskRepository.findAllByFilter(filter, authServiceImpl.takeUserFromContext().orElseThrow(), pageable);
+        Page<Task> tasks = taskRepository.findAllByFilter(filter, authServiceImpl.takeUserFromContext().orElseThrow(), pageable);
 
         assertFalse(tasks.isEmpty());
 

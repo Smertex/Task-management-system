@@ -1,11 +1,13 @@
 package by.smertex.dto.read;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Value;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 @Value
+@Schema(description = "Сущность пагинации, которая содержит в себе ее элементы")
 public class PageResponse <T>{
 
     List<T> content;
@@ -19,6 +21,7 @@ public class PageResponse <T>{
         );
     }
 
+    @Schema(description = "Метаданные пагинации: стараница, размер страницы, общее число элементов")
     @Value
     private static class Metadata <T>{
         int page;

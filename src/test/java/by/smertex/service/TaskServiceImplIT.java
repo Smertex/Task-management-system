@@ -1,6 +1,7 @@
 package by.smertex.service;
 
 import by.smertex.annotation.IT;
+import by.smertex.controller.exception.UserNotFoundInDatabaseException;
 import by.smertex.database.entity.realisation.Task;
 import by.smertex.database.entity.realisation.enums.Priority;
 import by.smertex.database.entity.realisation.enums.Role;
@@ -19,11 +20,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -62,7 +62,7 @@ public class TaskServiceImplIT {
                 .performer(new UserFilter(null, null))
                 .build();
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
-        List<ReadTaskDto> tasks = taskServiceImpl.findAllByFilter(filter, pageable);
+        Page<ReadTaskDto> tasks = taskServiceImpl.findAllByFilter(filter, pageable);
 
         assertFalse(tasks.isEmpty());
         tasks.forEach(task -> assertEquals(task.performer().email(), USER_EMAIL_TEST));
@@ -78,13 +78,13 @@ public class TaskServiceImplIT {
                 .performer(new UserFilter(ADMIN_EMAIL_TEST, null))
                 .build();
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
-        List<ReadTaskDto> tasks = taskServiceImpl.findAllByFilter(filter, pageable);
+        Page<ReadTaskDto> tasks = taskServiceImpl.findAllByFilter(filter, pageable);
         assertTrue(tasks.isEmpty());
 
         Mockito.doReturn(Optional.of(new SecurityUserDto(ADMIN_EMAIL_TEST, false)))
                 .when(authServiceImpl)
                 .takeUserFromContext();
-        List<ReadTaskDto> tasksWhereAdminPerformer = taskServiceImpl.findAllByFilter(filter, pageable);
+        Page<ReadTaskDto> tasksWhereAdminPerformer = taskServiceImpl.findAllByFilter(filter, pageable);
         assertFalse(tasksWhereAdminPerformer.isEmpty());
         tasksWhereAdminPerformer
                 .forEach(task -> assertNotEquals(task.performer().email(), USER_EMAIL_TEST));
@@ -101,7 +101,7 @@ public class TaskServiceImplIT {
                 .build();
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
-        List<ReadTaskDto> tasks = taskServiceImpl.findAllByFilter(filter, pageable);
+        Page<ReadTaskDto> tasks = taskServiceImpl.findAllByFilter(filter, pageable);
 
         assertFalse(tasks.isEmpty());
         tasks.forEach(task -> assertNotEquals(task.performer().email(), ADMIN_EMAIL_TEST));
@@ -119,7 +119,7 @@ public class TaskServiceImplIT {
                 .name("Test save task")
                 .performerEmail(USER_EMAIL_TEST + ".")
                 .build();
-        assertThrows(NoSuchElementException.class,
+        assertThrows(UserNotFoundInDatabaseException.class,
                 () -> taskServiceImpl.save(createOrUpdateTaskDto));
     }
 
@@ -179,7 +179,7 @@ public class TaskServiceImplIT {
 
         Pageable pageable = PageRequest.of(PAGE_NUMBER, 1);
 
-        List<ReadTaskDto> readTaskDto = taskServiceImpl.findAllByFilter(taskFilter, pageable);
+        Page<ReadTaskDto> readTaskDto = taskServiceImpl.findAllByFilter(taskFilter, pageable);
         assertTrue(readTaskDto.isEmpty());
 
         CreateOrUpdateTaskDto createOrUpdateTaskDto = CreateOrUpdateTaskDto.builder()
@@ -209,7 +209,7 @@ public class TaskServiceImplIT {
 
         readTaskDto = taskServiceImpl.findAllByFilter(taskFilter, pageable);
         assertFalse(readTaskDto.isEmpty());
-        assertEquals(readTaskDto.getFirst().performer().email(), USER_EMAIL_TEST);
+        assertEquals(readTaskDto.getContent().getFirst().performer().email(), USER_EMAIL_TEST);
     }
 
     @Test
@@ -245,7 +245,7 @@ public class TaskServiceImplIT {
                 .name(nameTask)
                 .build();
         Pageable pageable = PageRequest.of(PAGE_NUMBER, 1);
-        List<ReadTaskDto> readTaskDtoList = taskServiceImpl.findAllByFilter(taskFilter, pageable);
+        Page<ReadTaskDto> readTaskDtoList = taskServiceImpl.findAllByFilter(taskFilter, pageable);
         assertTrue(readTaskDtoList.isEmpty());
     }
 

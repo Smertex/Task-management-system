@@ -16,12 +16,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -66,7 +66,7 @@ public class CommentServiceImplIT {
                 .build();
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
-        List<ReadCommentDto> readCommentDtoList = commentServiceImpl.findAllByFilter(TASK_ID_WHERE_PERFORMER_USER_TEST, filter, pageable);
+        Page<ReadCommentDto> readCommentDtoList = commentServiceImpl.findAllByFilter(TASK_ID_WHERE_PERFORMER_USER_TEST, filter, pageable);
 
         assertFalse(readCommentDtoList.isEmpty());
         assertEquals(taskServiceImpl.findById(TASK_ID_WHERE_PERFORMER_USER_TEST).orElseThrow()
@@ -84,13 +84,13 @@ public class CommentServiceImplIT {
                 .build();
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
 
-        List<ReadCommentDto> readCommentDtoListNotPerformer = commentServiceImpl.findAllByFilter(TASK_ID_WHERE_PERFORMER_ADMIN_TEST, filter, pageable);
+        Page<ReadCommentDto> readCommentDtoListNotPerformer = commentServiceImpl.findAllByFilter(TASK_ID_WHERE_PERFORMER_ADMIN_TEST, filter, pageable);
         assertTrue(readCommentDtoListNotPerformer.isEmpty());
 
         Mockito.doReturn(Optional.of(new SecurityUserDto(ADMIN_EMAIL_TEST, false)))
                 .when(authServiceImpl)
                 .takeUserFromContext();
-        List<ReadCommentDto> readCommentDtoListPerformer = commentServiceImpl.findAllByFilter(TASK_ID_WHERE_PERFORMER_ADMIN_TEST, filter, pageable);
+        Page<ReadCommentDto> readCommentDtoListPerformer = commentServiceImpl.findAllByFilter(TASK_ID_WHERE_PERFORMER_ADMIN_TEST, filter, pageable);
         assertFalse(readCommentDtoListPerformer.isEmpty());
     }
 
@@ -104,7 +104,7 @@ public class CommentServiceImplIT {
                         .build())
                 .build();
         Pageable pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
-        List<ReadCommentDto> readCommentDtoListNotPerformer = commentServiceImpl.findAllByFilter(TASK_ID_WHERE_PERFORMER_USER_TEST, filter, pageable);
+        Page<ReadCommentDto> readCommentDtoListNotPerformer = commentServiceImpl.findAllByFilter(TASK_ID_WHERE_PERFORMER_USER_TEST, filter, pageable);
         assertFalse(readCommentDtoListNotPerformer.isEmpty());
     }
 

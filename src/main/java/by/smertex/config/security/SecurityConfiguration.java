@@ -41,7 +41,8 @@ public class SecurityConfiguration {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.DELETE, ApiPath.ID_TASK_PATH).hasRole(Role.ADMIN.getAuthority())
-                        .requestMatchers(ApiPath.SWAGGER_PATH, ApiPath.SWAGGER_DOCS_PATH, ApiPath.AUTH_PATH).anonymous()
+                        .requestMatchers(ApiPath.SWAGGER_PATH, ApiPath.SWAGGER_DOCS_PATH).hasRole(Role.ADMIN.getAuthority())
+                        .requestMatchers(ApiPath.AUTH_PATH).anonymous()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
