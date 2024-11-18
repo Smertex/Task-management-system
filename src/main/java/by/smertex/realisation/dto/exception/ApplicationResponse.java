@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatusCode;
 
 import java.time.LocalDateTime;
 
-@Schema(description = "Статус запроса")
+@Schema(description = "Статус запроса, зачастую находится в обертке")
 public record ApplicationResponse(String massage,
                                   HttpStatusCode httpStatusCode,
                                   LocalDateTime occurrenceTime) {

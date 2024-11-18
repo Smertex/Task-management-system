@@ -3,4 +3,6 @@ application-data:
   version: "1.0"
   name: "Task API"
   contact:
+    name: "Киселев Антон"
     vk: "https://vk.com/smertex"
+    email: "smertexx@gmail.com"

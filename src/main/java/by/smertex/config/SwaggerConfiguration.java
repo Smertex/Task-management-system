@@ -33,14 +33,16 @@ public class SwaggerConfiguration {
             @Value("${application-data.description}") String description,
             @Value("${application-data.version}") String version,
             @Value("${application-data.name}") String appName,
-            @Value("${application-data.contact.vk}") String contactVk) {
-
+            @Value("${application-data.contact.name}") String contactName,
+            @Value("${application-data.contact.vk}") String contactVk,
+            @Value("${application-data.contact.email}") String contactEmail) {
         return new OpenAPI().info(new Info()
                 .title(appName)
                 .version(version)
                 .description(description)
                 .contact(new Contact()
-                        .name("Контактная информация ")
+                        .email(contactEmail)
+                        .name(contactName)
                         .url(contactVk)));
     }
 
