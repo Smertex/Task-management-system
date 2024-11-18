@@ -37,7 +37,7 @@ public class Task implements BaseEntity<UUID> {
     @Column(name = "priority")
     private Priority priority;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "metainfo_id")
     private Metainfo metainfo;
 

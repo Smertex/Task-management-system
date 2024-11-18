@@ -1,5 +1,6 @@
 package by.smertex.service.realisation;
 
+import by.smertex.controller.exception.SaveMetainfoException;
 import by.smertex.dto.filter.TaskFilter;
 import by.smertex.dto.security.SecurityUserDto;
 import by.smertex.dto.update.CreateOrUpdateTaskDto;
@@ -12,6 +13,7 @@ import by.smertex.controller.exception.UserNotFoundInDatabaseException;
 import by.smertex.database.entity.realisation.Task;
 import by.smertex.database.repository.interfaces.TaskRepository;
 import by.smertex.dto.read.ReadTaskDto;
+import by.smertex.util.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,13 +51,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    @Transactional
-    public Optional<ReadTaskDto> save(CreateOrUpdateTaskDto dto){
+    @Transactional(rollbackFor = {UserNotFoundInDatabaseException.class, SaveMetainfoException.class})
+    public Optional<ReadTaskDto> save(CreateOrUpdateTaskDto dto) {
         return Optional.of(dto)
                 .map(element -> {
                     Task task = createOrUpdateTaskDtoToTaskMapper.map(element);
                     task.setMetainfo(metainfoService.save()
-                            .orElseThrow());
+                            .orElseThrow(() -> new SaveMetainfoException(ResponseMessage.SAVE_METAINFO_FAILED)));
                     task.setPerformer(userService.findByEmail(dto.performerEmail())
                             .orElseThrow(() -> new UserNotFoundInDatabaseException(dto.performerEmail())));
                     return task;
