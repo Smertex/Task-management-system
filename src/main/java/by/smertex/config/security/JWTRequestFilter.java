@@ -1,6 +1,6 @@
 package by.smertex.config.security;
 
-import by.smertex.realisation.dto.exception.ResponseException;
+import by.smertex.realisation.dto.exception.ApplicationResponse;
 import by.smertex.util.JwtTokenUtils;
 import by.smertex.util.ResponseMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,9 +60,9 @@ public class JWTRequestFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private ResponseException responseException(HttpServletResponse response, String message) {
+    private ApplicationResponse responseException(HttpServletResponse response, String message) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        return new ResponseException(message, HttpStatus.UNAUTHORIZED, LocalDateTime.now());
+        return new ApplicationResponse(message, HttpStatus.UNAUTHORIZED, LocalDateTime.now());
     }
 }

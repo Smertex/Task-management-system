@@ -2,14 +2,17 @@ package by.smertex.realisation.dto.update;
 
 import by.smertex.realisation.database.entity.enums.Priority;
 import by.smertex.realisation.database.entity.enums.Status;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
+@Schema(description = "Сущность для создания или обновления задачи в базе данных")
 @Builder
-public record CreateOrUpdateTaskDto(@NotNull String name,
-                                    @NotNull Status status,
-                                    @NotNull Priority priority,
-                                    @NotNull String description,
-                                    @Email @NotNull String performerEmail) {
+public record CreateOrUpdateTaskDto(@NotBlank(message = "Имя задачи не может быть пустой") String name,
+                                    @NotNull(message = "Статус не может быть пустым") Status status,
+                                    @NotNull(message = "Приоритет не может быть пустым") Priority priority,
+                                    @NotBlank(message = "Описание не может быть пустым") String description,
+                                    @NotBlank(message = "Почта испольнителя не может быть пустой") @Email(message = "Почта некорректна") String performerEmail) {
 }

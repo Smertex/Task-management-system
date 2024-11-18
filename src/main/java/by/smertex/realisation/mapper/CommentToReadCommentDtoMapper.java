@@ -15,6 +15,7 @@ public class CommentToReadCommentDtoMapper implements Mapper<Comment, ReadCommen
     @Override
     public ReadCommentDto map(Comment from) {
         return ReadCommentDto.builder()
+                .id(from.getId())
                 .content(from.getContent())
                 .createdAt(from.getCreatedAt())
                 .createdBy(userToReadUserDtoMapper.map(from.getCreatedBy()))

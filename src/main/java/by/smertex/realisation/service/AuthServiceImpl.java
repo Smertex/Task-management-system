@@ -3,8 +3,8 @@ package by.smertex.realisation.service;
 import by.smertex.interfaces.service.AuthService;
 import by.smertex.interfaces.service.LoadUserService;
 import by.smertex.realisation.database.entity.enums.Role;
+import by.smertex.realisation.dto.exception.ApplicationResponse;
 import by.smertex.realisation.dto.security.JwtRequest;
-import by.smertex.realisation.dto.security.AppResponse;
 import by.smertex.realisation.dto.security.SecurityUserDto;
 import by.smertex.util.JwtTokenUtils;
 import by.smertex.util.ResponseMessage;
@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -38,7 +39,8 @@ public class AuthServiceImpl implements AuthService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new AppResponse(HttpStatus.UNAUTHORIZED.value(), ResponseMessage.UNAUTHORIZED_USER), HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.badRequest()
+                    .body(new ApplicationResponse(ResponseMessage.UNAUTHORIZED_USER, HttpStatus.UNAUTHORIZED, LocalDateTime.now()));
         }
         UserDetails userDetails = loadUserService.loadUserByUsername(authRequest.username());
         String token = jwtTokenUtils.generateToken(userDetails);

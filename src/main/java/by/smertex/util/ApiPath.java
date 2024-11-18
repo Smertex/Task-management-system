@@ -11,7 +11,7 @@ public final class ApiPath {
     public static final String SWAGGER_DOCS_PATH = "/v3/api-docs" + ALL_PATH;
     public static final String COMMENT_IN_TASK_PATH = ID_PATH + COMMENT_PATH;
     public static final String COMMENT_UPDATE_PATH = COMMENT_PATH + ID_PATH;
-    public static final String ID_TASK_PATH =  ID_PATH;
+    public static final String ID_TASK_PATH = ID_PATH;
 
 
 }
