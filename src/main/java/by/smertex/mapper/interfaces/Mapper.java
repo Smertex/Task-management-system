@@ -1,5 +1,8 @@
 package by.smertex.mapper.interfaces;
 
+/**
+ * Маппер объектов, применяется в рамках проекта для конвертации Entity в DTO. F - from, T - to
+ */
 public interface Mapper <F, T> {
     T map(F from);
 

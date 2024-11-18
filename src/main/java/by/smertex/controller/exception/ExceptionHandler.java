@@ -20,6 +20,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+/**
+ * Класс-обработчик ошибок. При возникновении возвращает пользователю ответ в виде JSON
+ */
 @RestControllerAdvice(basePackages = "by.smertex.controller.realisation")
 public class ExceptionHandler extends ResponseEntityExceptionHandler {
 

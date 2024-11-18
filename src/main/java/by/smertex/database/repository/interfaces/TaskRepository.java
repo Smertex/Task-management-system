@@ -13,7 +13,9 @@ import java.util.UUID;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, UUID> {
-
+    /**
+     * Метод динамической фильтрации, который совмещен с пагинацией
+     */
     @Query("""
            select t from Task t
            join Metainfo m on t.metainfo.id = m.id

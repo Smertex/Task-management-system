@@ -3,6 +3,9 @@ package by.smertex.controller.exception;
 import by.smertex.util.ResponseMessage;
 import lombok.Getter;
 
+/**
+ * Ошибка нахождения пользователя в БД при проведении различных операций на уровне сервисов
+ */
 @Getter
 public class UserNotFoundInDatabaseException extends RuntimeException{
 

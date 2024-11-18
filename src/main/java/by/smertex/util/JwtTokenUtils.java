@@ -14,6 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Утилиты, декодирующие токен. Позволяют достать email пользователя (username), а также его роли,
+ * другими словами данные, закодированные в токене. Также данный класс генерирует токены на основне
+ * введеных пользователем логина и пароля
+ */
 @Component
 public class JwtTokenUtils {
     @Value("${jwt.secret}")

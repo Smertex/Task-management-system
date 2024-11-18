@@ -23,9 +23,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+/**
+ * Фильтр-сервлет, отвечающий за авторизацию пользователя в системе. Сохраняет пользователя в контексте приложения в случае валидации JWT
+ * до тех пор, пока запрос не будет завершен. После пользователь снова будет проходить проверку и сохранение в контексте. В случае, если
+ * пользователь не прошел проверку, то ему возвращается соответствующий ответ
+ */
 @Component
 @RequiredArgsConstructor
-public class JWTRequestFilter extends OncePerRequestFilter {
+public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final ObjectMapper objectMapper;
 

@@ -1,5 +1,9 @@
 package by.smertex.util;
 
+/**
+ * Основной набор сообщений, которые отсылаются для передачи информации пользователю в случае,
+ * когда нет конкретного возвращаемого JSON
+ */
 public final class ResponseMessage {
     public static final String USER_NOT_FOUND_EXCEPTION = "User not found";
     public static final String UNAUTHORIZED_USER = "Incorrect login or password";

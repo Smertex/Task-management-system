@@ -22,6 +22,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Конфигурационный класс Spring Security
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -29,7 +32,7 @@ public class SecurityConfiguration {
 
     private final LoadUserServiceImpl loadUserServiceImpl;
 
-    private final JWTRequestFilter jwtRequestFilter;
+    private final JwtRequestFilter jwtRequestFilter;
 
     @Bean
     @SneakyThrows

@@ -13,6 +13,9 @@ import java.util.UUID;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, UUID> {
+    /**
+     * Метод динамической фильтрации, который совмещен с пагинацией
+     */
     @Query("""
            select c from Comment c
            join fetch c.createdBy u1

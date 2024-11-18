@@ -2,6 +2,9 @@ package by.smertex.controller.exception;
 
 import lombok.Getter;
 
+/**
+ * Ошибка сохранения метаинфорамации задачи в БД
+ */
 @Getter
 public class SaveMetainfoException extends RuntimeException{
 

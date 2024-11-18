@@ -1,5 +1,8 @@
 package by.smertex.util;
 
+/**
+ * Эндпоинты данного API по которым можно получить доступ
+ */
 public final class ApiPath {
     public static final String API_PATH = "/api";
     public static final String COMMENT_PATH = "/comment";

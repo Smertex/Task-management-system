@@ -5,6 +5,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * Класс, конфигурирующий CORS доступ к приложению из доменов, котоыре приведены ниже
+ */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
