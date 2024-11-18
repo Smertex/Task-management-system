@@ -1,10 +1,10 @@
 package by.smertex.service;
 
 import by.smertex.annotation.IT;
-import by.smertex.realisation.database.entity.Metainfo;
-import by.smertex.realisation.dto.security.SecurityUserDto;
-import by.smertex.realisation.service.AuthServiceImpl;
-import by.smertex.realisation.service.MetainfoService;
+import by.smertex.database.entity.realisation.Metainfo;
+import by.smertex.dto.security.SecurityUserDto;
+import by.smertex.service.realisation.AuthServiceImpl;
+import by.smertex.service.realisation.MetainfoService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

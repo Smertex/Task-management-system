@@ -1,14 +1,14 @@
 package by.smertex.repository;
 
 import by.smertex.annotation.IT;
-import by.smertex.realisation.database.entity.Comment;
-import by.smertex.realisation.database.entity.Task;
-import by.smertex.realisation.database.repository.CommentRepository;
-import by.smertex.realisation.database.repository.TaskRepository;
-import by.smertex.realisation.dto.filter.CommentFilter;
-import by.smertex.realisation.dto.filter.UserFilter;
-import by.smertex.realisation.dto.security.SecurityUserDto;
-import by.smertex.realisation.service.AuthServiceImpl;
+import by.smertex.database.entity.realisation.Comment;
+import by.smertex.database.entity.realisation.Task;
+import by.smertex.database.repository.interfaces.CommentRepository;
+import by.smertex.database.repository.interfaces.TaskRepository;
+import by.smertex.dto.filter.CommentFilter;
+import by.smertex.dto.filter.UserFilter;
+import by.smertex.dto.security.SecurityUserDto;
+import by.smertex.service.realisation.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

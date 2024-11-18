@@ -1,7 +1,7 @@
 package by.smertex.config.security;
 
-import by.smertex.realisation.database.entity.enums.Role;
-import by.smertex.realisation.service.LoadUserServiceImpl;
+import by.smertex.database.entity.realisation.enums.Role;
+import by.smertex.service.realisation.LoadUserServiceImpl;
 import by.smertex.util.ApiPath;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

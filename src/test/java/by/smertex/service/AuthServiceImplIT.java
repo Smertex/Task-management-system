@@ -1,9 +1,9 @@
 package by.smertex.service;
 
 import by.smertex.annotation.IT;
-import by.smertex.realisation.database.entity.enums.Role;
-import by.smertex.realisation.dto.security.JwtRequest;
-import by.smertex.realisation.service.AuthServiceImpl;
+import by.smertex.database.entity.realisation.enums.Role;
+import by.smertex.dto.security.JwtRequest;
+import by.smertex.service.realisation.AuthServiceImpl;
 import by.smertex.util.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;

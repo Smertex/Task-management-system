@@ -1,8 +1,8 @@
 package by.smertex.service;
 
 import by.smertex.annotation.IT;
-import by.smertex.realisation.database.entity.enums.Role;
-import by.smertex.realisation.service.LoadUserServiceImpl;
+import by.smertex.database.entity.realisation.enums.Role;
+import by.smertex.service.realisation.LoadUserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.UserDetails;
