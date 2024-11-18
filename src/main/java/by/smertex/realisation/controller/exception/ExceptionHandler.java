@@ -43,4 +43,10 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(new ApplicationResponse(exception.getMessage(), HttpStatus.BAD_REQUEST, LocalDateTime.now()));
     }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(UserNotFoundInDatabaseException.class)
+    public ResponseEntity<ApplicationResponse> userNotFoundInDatabase(UserNotFoundInDatabaseException exception){
+        return ResponseEntity.badRequest()
+                .body(new ApplicationResponse(exception.getMessage(), HttpStatus.NOT_FOUND, LocalDateTime.now()));
+    }
 }

@@ -3,6 +3,7 @@ package by.smertex.realisation.service;
 import by.smertex.interfaces.service.AuthService;
 import by.smertex.interfaces.service.TaskService;
 import by.smertex.interfaces.service.UserService;
+import by.smertex.realisation.controller.exception.UserNotFoundInDatabaseException;
 import by.smertex.realisation.database.entity.Task;
 import by.smertex.realisation.database.repository.TaskRepository;
 import by.smertex.realisation.dto.filter.TaskFilter;
@@ -57,7 +58,7 @@ public class TaskServiceImpl implements TaskService {
                     task.setMetainfo(metainfoService.save()
                             .orElseThrow());
                     task.setPerformer(userService.findByEmail(dto.performerEmail())
-                            .orElseThrow());
+                            .orElseThrow(() -> new UserNotFoundInDatabaseException(dto.performerEmail())));
                     return task;
                 })
                 .map(taskRepository::save)
@@ -72,7 +73,7 @@ public class TaskServiceImpl implements TaskService {
                 .map(task -> {
                     Task update = createOrUpdateTaskDtoToTaskMapper.map(dto, task);
                     update.setPerformer(userService.findByEmail(dto.performerEmail())
-                            .orElseThrow());
+                            .orElseThrow(() -> new UserNotFoundInDatabaseException(dto.performerEmail())));
                     return update;
                 })
                 .map(taskRepository::saveAndFlush)

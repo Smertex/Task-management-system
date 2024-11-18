@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(
-        name = "Контроллер аутентификации",
-        description = "Возвращает JWT-токен, если в базе данных присутсвует пользователь, который проходит аутентификацию"
+        name = "Контроллер аутентификации"
 )
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +23,8 @@ public class AuthController {
     private final AuthService authService;
 
     @Operation(
-            summary = "Возвращает токен"
+            summary = "Возвращает токен",
+            description = "Возвращает JWT-токен, если в базе данных присутсвует пользователь, который проходит аутентификацию"
     )
     @PostMapping
     public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest){

@@ -4,6 +4,7 @@ import by.smertex.interfaces.service.AuthService;
 import by.smertex.interfaces.service.CommentService;
 import by.smertex.interfaces.service.TaskService;
 import by.smertex.interfaces.service.UserService;
+import by.smertex.realisation.controller.exception.UserNotFoundInDatabaseException;
 import by.smertex.realisation.database.entity.Comment;
 import by.smertex.realisation.database.repository.CommentRepository;
 import by.smertex.realisation.dto.filter.CommentFilter;
@@ -56,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
                 .map(task -> {
                     Comment comment = createOrUpdateCommentDtoToCommentMapper.map(dto);
                     comment.setCreatedBy(userService.findByEmail(user.email())
-                            .orElseThrow());
+                            .orElseThrow(() -> new UserNotFoundInDatabaseException(user.email())));
                     comment.setTask(taskService.findById(taskId)
                             .orElseThrow());
                     comment.setCreatedAt(LocalDateTime.now());
