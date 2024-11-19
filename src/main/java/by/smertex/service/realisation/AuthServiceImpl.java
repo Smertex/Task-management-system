@@ -9,6 +9,7 @@ import by.smertex.dto.security.JwtRequest;
 import by.smertex.util.JwtTokenUtils;
 import by.smertex.util.ResponseMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenUtils jwtTokenUtils;
 
     @Override
+    @CacheEvict(value = "users", key = "#authRequest.username()")
     public ResponseEntity<?> authentication(JwtRequest authRequest){
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
