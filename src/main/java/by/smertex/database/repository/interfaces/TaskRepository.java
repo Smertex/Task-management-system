@@ -18,6 +18,7 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
      */
     @Query("""
            select t from Task t
+           join fetch t.performer u1
            join Metainfo m on t.metainfo.id = m.id
            join User u on t.performer.id = u.id
            where (:#{#filter.createdBy.email} is null or :#{#filter.createdBy.email} = m.createdBy.email)
